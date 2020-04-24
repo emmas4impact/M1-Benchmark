@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <!--
+        QUIZ GAME!
+
+        RULES:
+        / The player must guess correctly a certain amount of questions
+        / Each correct answer gives him one point
+        / Answers could be â€œmultipleâ€ or â€œtrue/falseâ€
+        / At the end of the game, the user must know his total score
+
+        QUESTIONS:
+        / You can get them from this URL ( http://bit.ly/strive_QUIZZ ) or you can write your own
+        / Could be multiple of boolean (true / false)
+        / [EXTRA] Show if the answer was wrong or correct after clicking
+        / [EXTRA] Present them â€œone a timeâ€
+
+        HINTS:
+        / Keep a global variable â€œscoreâ€ for the score
+        / Keep a variable â€œquestionNumberâ€ for the â€œquestionâ€ the user is answering
+        / When â€œquestionNumberâ€ is bigger then the available questions, present the score
+        / Start working with the question saved in a variable, and then include AJAX etc
+        / Start with the easier version and THEN implement the â€œEXTRAsâ€
+        / Please debug everything / try it on the console to be sure of what to expect from your code
+
+        EXTRA:
+        / Show if the answer was wrong or correct after clicking
+        / Present questions one a time
+        / Let the user select difficulty and number of questions (you can get q/a from https://opentdb.com/api.php?amount=10&category=18&difficulty=easy modifying amount and difficulty)
+
+    -->
+
+  <head>
+    <title>Quiz Game</title>
+    
+    <style>
+        body{
+            font-size: 17px;
+	        font-family: sans-serif;
+            background-color: lightblue;
+            width: fit-content;
+            max-height: 420px;
+                     
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            border-radius: 15px 50px;
+        }
+       
+       
+        .quiz-container{
+            position: relative;
+            height: 222px;
+            margin-top: 40px;
+        }
+        #submit{
+            margin-top: 200px;
+            vertical-align: bottom;
+            
+            
+        }
+                
+    
+    </style>
+  
+  </head>
+  <body>
+    <h1>Quiz Game</h1>
+    <div class="quiz-container">
+        <div id="quiz"></div>
+    </div>
+      <button id="previous" hidden>Previous Question</button>
+      <button id="next" hidden>Next Question</button>
+      <button id="submit">Submit Quiz</button>
+    <div id="results"></div>
+    <script>
+      var questions = [
+        {
+          category: 'Science: Computers',
+          type: 'multiple',
+          difficulty: 'easy',
+          question: '1.  What does CPU stand for?',
+          answers:{
+              a: "Central Process Unit",
+              b: "Computer Personal Unit",
+              c: "Central Processor Unit",
+              d: "Central Processing Unit"
+          },
+          correct_answer: "d",
+         // incorrect_answers: ['Central Process Unit', 'Computer Personal Unit', 'Central Processor Unit'],
+        },
+        {
+          category: 'Science: Computers',
+          type: 'multiple',
+          difficulty: 'easy',
+          question: "2.  In the programming language Java, which of these keywords would you put on a variable to make sure it doesn't get modified?",
+          answers:{
+              a: "Static",
+              b: "Public",
+              c: "Final",
+              d: "Private"
+          },
+          correct_answer: "c",
+         // incorrect_answers: ['Static', 'Private', 'Public'],
+        },
+        {
+            category: 'Science: Computers',
+          type: 'boolean',
+          difficulty: 'easy',
+          question: "3. In the programming language Java, which of these keywords would you put on a variable to make sure it doesn't get modified?",
+          answers:{
+              a: "True",
+              b: "False",
+             
+          },
+          correct_answer: "b",
+         // incorrect_answers: ['True'],
+            
+        },
+        {
+            category: 'Science: Computers',
+          type: 'Multiple',
+          difficulty: 'easy',
+          question: "4. What is the most preferred image format used for logos in the Wikimedia database?",
+          answers:{
+              a: ".svg",
+              b: ".png",
+              c: ".jpeg",
+              d: ".gif"
+             
+          },
+          correct_answer: "a",
+         // incorrect_answers: ['True'],
+            
+        },
+        {
+          category: 'Science: Computers',
+          type: 'Multiple',
+          difficulty: 'easy',
+          question: "5. In web design, what does CSS stand for?",
+          answers:{
+              a: "Counter Strike",
+              b: "Cascading Style Sheet",
+              c: "Corrective Style Sheet",
+              d: "Computer Style Sheet"
+             
+          },
+          correct_answer: "b",
+         // incorrect_answers: ['True'],
+            
+        },
+        {
+            category: 'Science: Computers',
+          type: 'Multiple',
+          difficulty: 'easy',
+          question: "6. What is the code name for the mobile operating system Android 7.0?",
+          answers:{
+              a: "Nougat",
+              b: "Ice Cream Sandwich",
+              c: "Jelly Bean",
+              d: "Marshmallow"
+             
+          },
+          correct_answer: 'a',
+         // incorrect_answers: ['Ice Cream Sandwich', 'Jelly Bean', 'Marshmallow'],
+            
+        },
+        {
+          category: 'Science: Computers',
+          type: 'Multiple',
+          difficulty: 'easy',
+          question: "7. On Twitter, what is the character limit for a Tweet?",
+          answers:{
+              a: "120",
+              b: "140",
+              c: "160",
+              d: "100"
+             
+          },
+          correct_answer: 'b',
+         // incorrect_answers: ['120', '160', '100'],
+            
+        },
+        {
+          category: 'Science Computers', type: 'boolean', difficulty: 'easy',
+          question: "8. Linux was first created as an alternative to Windows XP.",
+          answers:{
+              a: "True",
+              b: "False",
+             
+          },
+          correct_answer: "b",
+         // incorrect_answers: ['True'],
+            
+        },
+        {
+          category: 'Science Computers',
+          type: 'Multiple',
+          difficulty: 'easy',
+          question: "9. Which programming language shares its name with an island in Indonesia?",
+          answers:{
+              a: "C",
+              b: "Jakarta",
+              c: "Java",
+              d: "Python"
+             
+          },
+          correct_answer: 'c',
+         // incorrect_answers: [Python', 'C', 'Jakarta'],
+            
+        },
+      
+      ];
+      
+      const quizContainer = document.getElementById('quiz');
+      const resultsContainer = document.getElementById('results');
+      const submitButton = document.getElementById('submit');
+     
+      
+      let currentSlide = 0;
+      
+      
+
+      window.onload = function () {
+        buildQuiz();
+       
+        //showResults();
+        //IF YOU ARE DISPLAYING ALL THE QUESTIONS TOGETHER:
+        //HINT: for each question, create a container with the "question"
+        //create a radio button https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio with, as option the both the correct answer and the incorrect answers
+        //when EVERY question has an answer (google for how to get a value from a radio button with JS)
+        //IF YOU ARE DISPLAYING ONE QUESTION AT A TIME
+        //Display first question with a title + radio button
+        //when the user select the answer, pick the next question and remove this from the page after added in a varible the users' choice.
+      }
+     
+      function buildQuiz(){
+        
+         const output = [];
+
+        
+        questions.forEach(
+            (currentQuestion, questionNumber) => {
+
+            // variable to store the list of possible answers
+            const answers = [];
+
+            // and for each available answer...
+            for(letter in currentQuestion.answers){
+
+            // ...add an HTML radio button
+            answers.push(
+             `<label>
+             <input type="radio"  name="question${questionNumber}" value="${letter}">
+             ${letter} :
+              ${currentQuestion.answers[letter]}
+            </label>`
+            );
+        }
+
+        // add this question and its answers to the output
+        output.push(
+            
+        `
+        
+        <div class="question"> ${currentQuestion.question} </div>
+        <div class="answers"> ${answers.join('')} </div>`
+        );
+        }
+        );
+
+    // finally combine our output list into one string of HTML and put it on the page
+     quizContainer.innerHTML = output.join('');
+    }
+    function showResults(){
+
+        // gather answer containers from our quiz
+        const answerContainers = quizContainer.querySelectorAll('.answers');
+
+        // keep track of user's answers
+        let numCorrect = 0;
+
+        // loop through the question
+        questions.forEach( (currentQuestion, questionNumber) => {
+
+            // find selected answer
+            const answerContainer = answerContainers[questionNumber];
+            const selector = `input[name=question${questionNumber}]:checked`;
+            const userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+        // if answer is correct
+        if(userAnswer === currentQuestion.correct_answer){
+            // add to the number of correct answers
+            numCorrect++;
+
+            // color the answers green
+            answerContainers[questionNumber].style.color = 'green';
+        }
+        // if answer is wrong or blank
+        else{
+            // color the answers red
+            answerContainers[questionNumber].style.color = 'red';
+        }
+        });
+
+        // show number of correct answers out of total
+        resultsContainer.innerHTML ="Total Score: "+ `${numCorrect} out of ${questions.length}`;
+        if(numCorrect<5){
+            resultsContainer.innerHTML="Failed!! Your Score is: "+`${numCorrect} out of ${questions.length}`
+            
+            
+        }else{
+            resultsContainer.innerHTML="Congratulation!! Your Score is: "+`${numCorrect}out of ${questions.length}`
+            
+        }
+}
+
+submitButton.addEventListener('click', showResults);
+
+
+      //HOW TO calculate the result
+      //You can do it in 2 ways:
+      //If you are presenting all questions together, just take all the radio buttons and check if the selected answer === correct_answer
+      //If you are presenting one question at a time, just add one point or not to the user score if the selected answer === correct_answer
+      
+    </script>
+  </body>
+</html>
