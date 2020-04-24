@@ -39,7 +39,7 @@
 	        font-family: sans-serif;
             background-color: lightblue;
             width: fit-content;
-            max-height: 420px;
+            max-height: 720px;
                      
         }
         h1 {
@@ -55,8 +55,9 @@
             margin-top: 40px;
         }
         #submit{
-            margin-top: 200px;
+            margin-top: 750px;
             vertical-align: bottom;
+            
             
             
         }
@@ -72,12 +73,12 @@
     </div>
       <button id="previous" hidden>Previous Question</button>
       <button id="next" hidden>Next Question</button>
-      <button id="submit">Submit Quiz</button>
+      <button id="submit">SUBMIT QUIZ</button>
     <div id="results"></div>
     <script>
       var questions = [
         {
-          category: 'Science: Computers',
+          category: 'Science Computers',
           type: 'multiple',
           difficulty: 'easy',
           question: '1.  What does CPU stand for?',
@@ -91,7 +92,7 @@
          // incorrect_answers: ['Central Process Unit', 'Computer Personal Unit', 'Central Processor Unit'],
         },
         {
-          category: 'Science: Computers',
+          category: 'Science Computers',
           type: 'multiple',
           difficulty: 'easy',
           question: "2.  In the programming language Java, which of these keywords would you put on a variable to make sure it doesn't get modified?",
@@ -105,7 +106,7 @@
          // incorrect_answers: ['Static', 'Private', 'Public'],
         },
         {
-            category: 'Science: Computers',
+            category: 'Science Computers',
           type: 'boolean',
           difficulty: 'easy',
           question: "3. In the programming language Java, which of these keywords would you put on a variable to make sure it doesn't get modified?",
@@ -119,7 +120,7 @@
             
         },
         {
-            category: 'Science: Computers',
+            category: 'Science Computers',
           type: 'Multiple',
           difficulty: 'easy',
           question: "4. What is the most preferred image format used for logos in the Wikimedia database?",
@@ -135,7 +136,7 @@
             
         },
         {
-          category: 'Science: Computers',
+          category: 'Science Computers',
           type: 'Multiple',
           difficulty: 'easy',
           question: "5. In web design, what does CSS stand for?",
@@ -151,7 +152,7 @@
             
         },
         {
-            category: 'Science: Computers',
+            category: 'Science Computers',
           type: 'Multiple',
           difficulty: 'easy',
           question: "6. What is the code name for the mobile operating system Android 7.0?",
@@ -167,7 +168,7 @@
             
         },
         {
-          category: 'Science: Computers',
+          category: 'Science Computers',
           type: 'Multiple',
           difficulty: 'easy',
           question: "7. On Twitter, what is the character limit for a Tweet?",
@@ -263,6 +264,8 @@
         output.push(
             
         `
+        <h4>Category: ${currentQuestion.category}  Type:  ${currentQuestion.type} 
+         Difficulty: ${currentQuestion.difficulty}</h4>
         
         <div class="question"> ${currentQuestion.question} </div>
         <div class="answers"> ${answers.join('')} </div>`
